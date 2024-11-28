@@ -43,7 +43,8 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+uint8_t data[10] = "hello\n\r";
+uint8_t echo[50];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,7 +68,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  uint8_t data[10] = "hello\n\r";
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -91,6 +92,9 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+
+  HAL_UART_Receive_IT(&huart2, echo, 2);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -211,6 +215,27 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(huart);
+
+  USART1->SR |= USART_SR_RXNE_Msk;  // atempt to clear the mask
+  huart->RxState = HAL_UART_STATE_READY;
+
+  HAL_UART_Transmit(&huart2, echo, 2, 10);
+
+  // Optionally restart reception
+  HAL_UART_Receive_IT(&huart2, echo, 2);
+}
+
+//void USART1_IRQHandler() {
+//    if (USART1->SR & USART_SR_RXNE) {  // Check if RXNE is set
+//        uint8_t received_data = USART1->DR;  // Read data, clears RXNE flag
+//        // Process the received data
+//
+//    }
+//}
 
 /* USER CODE END 4 */
 
