@@ -53,6 +53,9 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
+void serial_print(uint8_t data[], uint8_t size);
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -93,7 +96,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
-  HAL_UART_Receive_IT(&huart2, echo, 2);
+  HAL_UART_Receive_IT(&huart2, echo, 1);
 
   /* USER CODE END 2 */
 
@@ -101,9 +104,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_UART_Transmit(&huart2, data, 10, 10);
-	  HAL_Delay(1000);
+	  //serial_print(data, 10);
+
+	  // blinking
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+	  HAL_Delay(500);
 
     /* USER CODE END WHILE */
 
@@ -220,22 +225,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   /* Prevent unused argument(s) compilation warning */
   UNUSED(huart);
 
-  USART1->SR |= USART_SR_RXNE_Msk;  // atempt to clear the mask
-  huart->RxState = HAL_UART_STATE_READY;
+  // echos imput
+  HAL_UART_Transmit(&huart2, echo, 1, 10);
 
-  HAL_UART_Transmit(&huart2, echo, 2, 10);
-
-  // Optionally restart reception
-  HAL_UART_Receive_IT(&huart2, echo, 2);
+  // restart reception
+  HAL_UART_Receive_IT(&huart2, echo, 1);
 }
 
-//void USART1_IRQHandler() {
-//    if (USART1->SR & USART_SR_RXNE) {  // Check if RXNE is set
-//        uint8_t received_data = USART1->DR;  // Read data, clears RXNE flag
-//        // Process the received data
-//
-//    }
-//}
+
+void serial_print(uint8_t data[], uint8_t size){
+	HAL_UART_Transmit(&huart2, data, size, 10);
+}
 
 /* USER CODE END 4 */
 
