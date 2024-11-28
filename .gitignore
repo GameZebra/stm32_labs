@@ -52,6 +52,14 @@ Mkfile.old
 dkms.conf
 
 # STM32 CUBE IDE metatdata (I don't know if it is important or not)
-.metadata
+.metadata/
+RemoteSystemsTempFiles/
+.settings/
+Debug/
+*.launch
+
+# STM32 git ignore (whatever that means)
+
+*.mxproject
 
 
