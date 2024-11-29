@@ -40,10 +40,12 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-uint8_t data[10] = "hello\n\r";
+uint8_t hi[10] = "nucleo\n\r";
+uint8_t hex[2] = {0x8, 0x8}; // can't see that on the terminal
 uint8_t echo[50];
 /* USER CODE END PV */
 
@@ -51,6 +53,7 @@ uint8_t echo[50];
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 void serial_print(uint8_t data[], uint8_t size);
@@ -93,10 +96,11 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
-  HAL_UART_Receive_IT(&huart2, echo, 1);
+  //HAL_UART_Receive_IT(&huart1, echo, 10);
 
   /* USER CODE END 2 */
 
@@ -104,11 +108,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //serial_print(data, 10);
+	  //serial_print(hi, 10);
+	  //HAL_Delay(500);
+	  //HAL_UART_Transmit(&huart2, hex, 2, 10);
 
 	  // blinking
+	  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+	  //HAL_Delay(500);
+
+	  HAL_UART_Transmit(&huart2, hi, 10, 10);
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	  HAL_Delay(500);
+	  HAL_Delay(300);
+
+	  // restart reception
+	  HAL_UART_Receive(&huart1, echo, 10, 1000);
+	  HAL_UART_Transmit(&huart2, echo, 10, 10);
+
 
     /* USER CODE END WHILE */
 
@@ -159,6 +174,39 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -203,6 +251,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -226,10 +275,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   UNUSED(huart);
 
   // echos imput
-  HAL_UART_Transmit(&huart2, echo, 1, 10);
+  HAL_UART_Transmit(&huart2, echo, 10, 10);
+  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+  HAL_Delay(300);
 
   // restart reception
-  HAL_UART_Receive_IT(&huart2, echo, 1);
+  HAL_UART_Receive_IT(&huart1, echo, 10);
 }
 
 

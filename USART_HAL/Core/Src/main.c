@@ -67,7 +67,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	uint8_t data[10] = "Hello\n";
+	uint8_t hi[10] = "Hello\n";
+	//uint8_t received[2];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -91,15 +92,43 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_UART_Transmit(&huart1, hi, 10, 1000);
+  HAL_Delay(10);
+
+  // important commands
+  // 0x83 read conf params
+  // 0x84 write conf params
+
+  // M0 Forward
+  // 0x88, motor speed (max 127)
+
+  // M1 Forward
+  // 0x8C, motor speed (max 127)
+
+  //about this not sure
+ // HAL_UART_Receive_IT(&huart1, received, 2);
+
+  void example(){
+	  uint8_t command[2] = {0x8, 0x8};
+	  uint8_t values[1] = {120};
+	  HAL_UART_Transmit(&huart1, command, 2, 1000);
+	  HAL_UART_Transmit(&huart1, values, 1, 1000);
+
+  }
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  //example();
+	  HAL_UART_Transmit(&huart1, hi, 10, 10);
+	  HAL_Delay(1000);
+	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
 
-	  HAL_UART_Transmit(&huart1, data, 10, 1000);
-	  HAL_Delay(10);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -188,11 +217,23 @@ static void MX_USART1_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PD13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
