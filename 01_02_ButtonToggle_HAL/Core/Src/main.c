@@ -67,7 +67,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	uint8_t b1State = 0;
 	uint8_t last = 0;
-	uint8_t flag = 1;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
