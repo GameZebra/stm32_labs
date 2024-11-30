@@ -49,7 +49,7 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void flashingLED(GPIO_TypeDef *GPIOx, uint32_t PortValue, int delay);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -65,7 +65,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	uint8_t b1State = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -101,10 +101,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin);
-	  LL_mDelay(200);
-	  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, 0x0);
-	  LL_mDelay(200);
+	  flashingLED(redLED_GPIO_Port, redLED_Pin, 200);
+	  b1State = LL_GPIO_ReadInputPort(userButton_GPIO_Port) & userButton_Pin;
+	  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin * b1State);
+	  //TODO try to | the register will it add sum in the next register?
+	  // most probably yes
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -161,7 +164,7 @@ static void MX_GPIO_Init(void)
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
 
   /**/
-  LL_GPIO_ResetOutputPin(greenLED_GPIO_Port, greenLED_Pin);
+  LL_GPIO_ResetOutputPin(GPIOD, greenLED_Pin|redLED_Pin);
 
   /**/
   GPIO_InitStruct.Pin = userButton_Pin;
@@ -170,19 +173,27 @@ static void MX_GPIO_Init(void)
   LL_GPIO_Init(userButton_GPIO_Port, &GPIO_InitStruct);
 
   /**/
-  GPIO_InitStruct.Pin = greenLED_Pin;
+  GPIO_InitStruct.Pin = greenLED_Pin|redLED_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(greenLED_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
-
+void flashingLED(GPIO_TypeDef *GPIOx, uint32_t PortValue, int delay){
+	uint16_t currentValues = LL_GPIO_ReadOutputPort(GPIOx);
+	uint16_t turnOff = currentValues & ~PortValue; 		// clears only the specific pin
+	LL_GPIO_WriteOutputPort(GPIOx, currentValues | PortValue);
+	LL_mDelay(delay);
+	LL_GPIO_WriteOutputPort(GPIOx, turnOff);
+	//LL_GPIO_ResetOutputPin(GPIOx, PortValue);			// alternative for clearing the output
+	LL_mDelay(delay);
+}
 /* USER CODE END 4 */
 
 /**
