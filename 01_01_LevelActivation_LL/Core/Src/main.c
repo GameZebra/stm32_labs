@@ -95,6 +95,14 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
+  uint16_t test = greenLED_Pin;
+  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, test);
+  LL_mDelay(500);
+  //test ^= greenLED_Pin;		//bitwise xor to deactivate the pin
+  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, test);
+  LL_mDelay(500);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,8 +112,9 @@ int main(void)
 	  flashingLED(redLED_GPIO_Port, redLED_Pin, 200);
 	  b1State = LL_GPIO_ReadInputPort(userButton_GPIO_Port) & userButton_Pin;
 	  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin * b1State);
-	  //TODO try to | the register will it add sum in the next register?
-	  // most probably yes
+
+	  //DONE: try to | the register will it add sum in the next register?
+	  // no the operations are  bitwise and there is no carry
 
 
     /* USER CODE END WHILE */
@@ -191,9 +200,11 @@ void flashingLED(GPIO_TypeDef *GPIOx, uint32_t PortValue, int delay){
 	LL_GPIO_WriteOutputPort(GPIOx, currentValues | PortValue);
 	LL_mDelay(delay);
 	LL_GPIO_WriteOutputPort(GPIOx, turnOff);
-	//LL_GPIO_ResetOutputPin(GPIOx, PortValue);			// alternative for clearing the output
+	//LL_GPIO_ResetOutputPin(GPIOx, turnOff);			// alternative for clearing the output
 	LL_mDelay(delay);
 }
+
+
 /* USER CODE END 4 */
 
 /**
