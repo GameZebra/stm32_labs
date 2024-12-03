@@ -49,7 +49,10 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void loadingWheel(uint16_t delay) __attribute__((unused));
+void TurnOnLed(uint16_t GPIO_Pin);
+void TurnOffLed(uint16_t GPIO_Pin);
+void myDelay(uint16_t delay);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -65,7 +68,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	uint16_t delay = 400;
+	uint16_t delay = 200;
+	uint8_t state = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -94,31 +98,39 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 1);
-	  HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, redLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, blueLED_Pin,0);
-	  HAL_Delay(delay);
-
-	  HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 1);
-	  HAL_GPIO_WritePin(GPIOD, redLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, blueLED_Pin,0);
-	  HAL_Delay(delay);
-
-	  HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, redLED_Pin, 1);
-	  HAL_GPIO_WritePin(GPIOD, blueLED_Pin,0);
-	  HAL_Delay(delay);
-
-	  HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, redLED_Pin, 0);
-	  HAL_GPIO_WritePin(GPIOD, blueLED_Pin,1);
-	  HAL_Delay(delay);
+	  //loadingWheel(delay);
 
 	  // TODO: think of more inteligent way to solve the same problem
+	  switch(state) //display the current state
+	  {
+	  	  case 0:
+	  		  TurnOnLed(greenLED_Pin);
+			  TurnOffLed(orangeLED_Pin);
+			  TurnOffLed(redLED_Pin);
+			  TurnOffLed(blueLED_Pin);
+			  break;
+	  	  case 1:
+			  TurnOffLed(greenLED_Pin);
+			  TurnOnLed(orangeLED_Pin);
+			  TurnOffLed(redLED_Pin);
+			  TurnOffLed(blueLED_Pin);
+			  break;
+	  	  case 2:
+			  TurnOffLed(greenLED_Pin);
+			  TurnOffLed(orangeLED_Pin);
+			  TurnOnLed(redLED_Pin);
+			  TurnOffLed(blueLED_Pin);
+			  break;
+	  	  case 3:
+	  		  TurnOffLed(greenLED_Pin);
+			  TurnOffLed(orangeLED_Pin);
+			  TurnOffLed(redLED_Pin);
+			  TurnOnLed(blueLED_Pin);
+	  		  break;
+	  }
+	  if ( ++state == 4 ) state=0;
+	  //myDelay(500);     //Sets each loop cycle duration
+	  HAL_Delay(delay);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -197,6 +209,45 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+void loadingWheel(uint16_t delay){
+
+	HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 1);
+	HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, redLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, blueLED_Pin, 0);
+	HAL_Delay(delay);
+
+	HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 1);
+	HAL_GPIO_WritePin(GPIOD, redLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, blueLED_Pin, 0);
+	HAL_Delay(delay);
+
+	HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, redLED_Pin, 1);
+	HAL_GPIO_WritePin(GPIOD, blueLED_Pin, 0);
+	HAL_Delay(delay);
+
+	HAL_GPIO_WritePin(GPIOD, greenLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, orangeLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, redLED_Pin, 0);
+	HAL_GPIO_WritePin(GPIOD, blueLED_Pin, 1);
+	HAL_Delay(delay);
+}
+
+
+void TurnOnLed(uint16_t GPIO_Pin){
+	GPIOD->BSRR |= GPIO_Pin;
+}
+
+void TurnOffLed(uint16_t GPIO_Pin){
+	GPIOD->BSRR |= GPIO_Pin << 16U;
+}
+
+void myDelay(uint16_t delay){
+	//TODO something whith the timer configuration
+}
 /* USER CODE END 4 */
 
 /**
