@@ -91,7 +91,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  uint32_t freq = HAL_RCC_GetSysClockFreq();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -129,8 +129,8 @@ int main(void)
 	  		  break;
 	  }
 	  if ( ++state == 4 ) state=0;
-	  //myDelay(500);     //Sets each loop cycle duration
-	  HAL_Delay(delay);
+	  myDelay(1000);     //Sets each loop cycle duration
+	  //HAL_Delay(delay);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -246,7 +246,9 @@ void TurnOffLed(uint16_t GPIO_Pin){
 }
 
 void myDelay(uint16_t delay){
-	//TODO something whith the timer configuration
+	//TODO something with the timer configuration
+	uint32_t a = delay * 2000UL;
+	while(a--);
 }
 /* USER CODE END 4 */
 
