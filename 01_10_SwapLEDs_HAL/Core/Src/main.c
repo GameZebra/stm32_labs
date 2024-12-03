@@ -66,6 +66,8 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	int counter = 0;
+	uint16_t state = 0;
+	uint16_t last = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -94,19 +96,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(HAL_GPIO_ReadPin(userButton_GPIO_Port, userButton_Pin)){
-		  if(couter % 2 == 1){
-			  HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 1);
-			  HAL_GPIO_WritePin(blueLED_GPIO_Port, blueLED_Pin, 0);
-			  ocunter++;
-		  }
-		  else{
-			  HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 0);
-			  HAL_GPIO_WritePin(blueLED_GPIO_Port, blueLED_Pin, 1);
-			  ocunter++;
-		  }
+	  state = HAL_GPIO_ReadPin(userButton_GPIO_Port, userButton_Pin);
+	  HAL_Delay(4);
+	  if(state == 1 && last !=state){
+		  counter++;
 	  }
-
+	  if(counter % 2 == 1){
+		  HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 1);
+		  HAL_GPIO_WritePin(blueLED_GPIO_Port, blueLED_Pin, 0);
+	  }
+	  else{
+		  HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 0);
+		  HAL_GPIO_WritePin(blueLED_GPIO_Port, blueLED_Pin, 1);
+	  }
+	  last = state;
 
     /* USER CODE END WHILE */
 
