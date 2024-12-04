@@ -242,12 +242,14 @@ void TurnOnLed(uint16_t GPIO_Pin){
 }
 
 void TurnOffLed(uint16_t GPIO_Pin){
+	// writes it the eqivelent of BSRRH and disables the specific pin when we write 1 there
 	GPIOD->BSRR |= GPIO_Pin << 16U;
 }
 
 void myDelay(uint16_t delay){
 	//TODO something with the timer configuration
-	uint32_t a = delay * 2000UL;
+	uint32_t a = delay * 2000UL; //tested with HSI 16 MHz and is accurate
+				     //TODO why so?
 	while(a--);
 }
 /* USER CODE END 4 */
