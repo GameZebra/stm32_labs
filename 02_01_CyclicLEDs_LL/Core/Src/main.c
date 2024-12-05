@@ -49,7 +49,7 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void myDelay(uint16_t delay);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -96,7 +96,8 @@ int main(void)
   while (1)
   {
 	  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, value);
-	  LL_mDelay(200);		//TODO software delay with the external crystal
+	  //LL_mDelay(200
+	  myDelay(1000);
 	  value = value << 1;
 	  if(value > blueLED_Pin){
 		  value = greenLED_Pin;
@@ -182,7 +183,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void myDelay(uint16_t delay){
+	// get system clock 8 MGHz
+	uint32_t time = delay * 1000UL; // sysCLK is 2 times slower than the internal one so we use 2 times lower coefficient
+	while(time--);
+}
 /* USER CODE END 4 */
 
 /**
