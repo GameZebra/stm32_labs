@@ -247,7 +247,6 @@ void TurnOffLed(uint16_t GPIO_Pin){
 }
 
 void myDelay(uint16_t delay){
-	uint32_t a = delay * 2000UL;
 	//TODO something with the timer configuration
 	uint32_t a = delay * 2000UL; //tested with HSI 16 MHz and is accurate
 				     	 	 	 //TODO why so?
