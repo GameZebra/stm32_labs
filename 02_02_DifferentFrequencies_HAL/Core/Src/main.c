@@ -69,6 +69,7 @@ int main(void)
 	uint16_t lastState = b1State;
 	uint16_t delays[2] = {200, 1000};
 	uint8_t current = 0;
+	uint16_t durr = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -101,11 +102,20 @@ int main(void)
 	  if(b1State == 1 && lastState != b1State){
 		  current ^= 1;
 	  }
-	  HAL_GPIO_TogglePin(greenLED_GPIO_Port, greenLED_Pin);
-	  HAL_Delay(delays[current]);
-	  lastState = b1State;
+	  //HAL_GPIO_TogglePin(greenLED_GPIO_Port, greenLED_Pin);
+	  //HAL_Delay(delays[current]);
+	  //lastState = b1State;
 
 	  // the delay time can be changed only when we are not reading the output
+	  if(++durr >= delays[current]){
+		  durr = 0;
+		  HAL_GPIO_TogglePin(greenLED_GPIO_Port, greenLED_Pin);
+	  }
+	  lastState = b1State;
+	  HAL_Delay(1);
+	  // delay for the cycle
+	  // absolutely necessary for it to function properly, WHY?
+	  // this way we norm the calculation speed
 
     /* USER CODE END WHILE */
 
