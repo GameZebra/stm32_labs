@@ -52,6 +52,8 @@ static void MX_GPIO_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 
+void TimerReset(void);
+int IsTimeUp(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -67,7 +69,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	uint8_t state =0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -90,13 +92,32 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-
+  TimerReset();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(IsTimeUp())  //If the end of the durration for
+	  {    //the current state was reached
+	   TimerReset();
+
+	   switch(state) //display the current state
+	   {
+	    case 0:
+	    	HAL_GPIO_WritePin(greenLED_GPIO_Port, greenLED_Pin, 1);
+	     break;
+	    case 1:
+	    	HAL_GPIO_WritePin(greenLED_GPIO_Port, greenLED_Pin, 0);
+	     break;
+	    case 2:
+	    break;
+	   }
+
+	   if ( ++state == 3 ) state=0;
+	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -161,9 +182,9 @@ static void MX_TIM10_Init(void)
 
   /* USER CODE END TIM10_Init 1 */
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 0;
+  htim10.Init.Prescaler = 16-1;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 65535;
+  htim10.Init.Period = 100-1;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
@@ -205,6 +226,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void TimerReset()
+{
+    TIM10->EGR |= 0x0001; //Forces initial updating of the timer
+    TIM10->SR = 0x0000;   //Clearing the status register
+ // to prevent immеdiate transition
+}
+int IsTimeUp()
+{
+    return TIM10->SR & 0x0002;
+}
 
 /* USER CODE END 4 */
 
