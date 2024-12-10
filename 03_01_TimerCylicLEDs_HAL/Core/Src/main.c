@@ -54,6 +54,7 @@ static void MX_TIM10_Init(void);
 
 void TimerReset(void);
 int IsTimeUp(void);
+void TimerInit(unsigned short first_durr) ;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -92,6 +93,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
+  TimerInit(200);
   TimerReset();
   /* USER CODE END 2 */
 
@@ -184,9 +186,9 @@ static void MX_TIM10_Init(void)
   htim10.Instance = TIM10;
   htim10.Init.Prescaler = 16-1;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 100-1;
+  htim10.Init.Period = 6000;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
     Error_Handler();
@@ -237,7 +239,16 @@ int IsTimeUp()
 {
     return TIM10->SR & 0x0002;
 }
-
+void TimerInit(unsigned short first_durr)
+{
+ //Timer handling transition of the states
+ TIM10->CCMR1 = 0x0000;  //Set as output (compare function еnabled)
+ TIM10->PSC = 16800; //Set prescaler to 16800 (each tick is 0.1 millisec)
+ TIM10->ARR = 60000; //Set auto-reload value to 60000 (close to maximum)
+//Set comparator value to the durration for the first state ms->0.1ms count
+ TIM10->CCR1 = 10 * first_durr;
+ TIM10->CR1 |= 0x0081; //Enables the timer
+}
 /* USER CODE END 4 */
 
 /**
