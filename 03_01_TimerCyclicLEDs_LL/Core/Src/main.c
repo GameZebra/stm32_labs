@@ -66,7 +66,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	uint32_t status = 0;
+	uint32_t status1 = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -96,21 +96,23 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-
+  LL_TIM_EnableCounter(TIM10);
+  TIM10->CCR1 = 200;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  status = LL_TIM_IsActiveFlag_CC1(TIM10);
-	  if(status){
-		  LL_GPIO_WriteOutputPort(greernLED_GPIO_Port, greernLED_Pin); // on
-		  //LL_TIM_ClearFlag_CC1(TIM10);
+	  status1 = LL_TIM_IsActiveFlag_CC1(TIM10);
+	  if(status1){
+		  LL_GPIO_WriteOutputPort(greernLED_GPIO_Port, 0);
 	  }
-	  else{
-		  LL_GPIO_WriteOutputPort(greernLED_GPIO_Port, 0x0); //off
+	  if(LL_TIM_GetAutoReload(TIM10)==LL_TIM_GetCounter(TIM10)){
+		  LL_GPIO_WriteOutputPort(greernLED_GPIO_Port, greernLED_Pin);
+		  LL_TIM_ClearFlag_CC1(TIM10);
 	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -178,8 +180,6 @@ static void MX_TIM10_Init(void)
   LL_TIM_Init(TIM10, &TIM_InitStruct);
   LL_TIM_DisableARRPreload(TIM10);
   /* USER CODE BEGIN TIM10_Init 2 */
-  LL_TIM_ClearFlag_CC1(TIM10);
-  LL_TIM_ClearFlag_TRIG(TIM10);
 
   /* USER CODE END TIM10_Init 2 */
 
