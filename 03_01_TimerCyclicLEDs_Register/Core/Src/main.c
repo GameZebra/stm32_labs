@@ -96,13 +96,20 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-
+  myTimerInit();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if((TIM10->SR & 0x10) == 1){
+		  TIM10->SR = 0;
+		  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin);
+	  }
+	  if(TIM10->CNT == 1000){
+		  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, 0);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -205,7 +212,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void myTimerInit(void){
+	TIM10->CCR1 = 300;
+	TIM10->CR1 |= 0x1;
+}
 /* USER CODE END 4 */
 
 /**
