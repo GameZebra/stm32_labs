@@ -103,12 +103,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if((TIM10->SR & 0x10) == 1){
+	  if((TIM10->SR & 0b10) == 0b10){
 		  TIM10->SR = 0;
-		  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin);
+		  //LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin);
+		  greenLED_GPIO_Port->ODR = greenLED_Pin;
 	  }
 	  if(TIM10->CNT == 1000){
-		  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, 0);
+		  //LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, 0);
+		  greenLED_GPIO_Port->ODR = 0x0;
 	  }
     /* USER CODE END WHILE */
 
