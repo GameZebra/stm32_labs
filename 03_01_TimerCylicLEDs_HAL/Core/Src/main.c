@@ -93,7 +93,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-  TimerInit(200);
+  TimerInit(500);
   TimerReset();
   /* USER CODE END 2 */
 
@@ -109,11 +109,19 @@ int main(void)
 	   {
 	    case 0:
 	    	HAL_GPIO_WritePin(greenLED_GPIO_Port, greenLED_Pin, 1);
-	     break;
+	    	HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 0);
+	    	HAL_GPIO_WritePin(redLED_GPIO_Port, redLED_Pin, 0);
+	    	break;
 	    case 1:
 	    	HAL_GPIO_WritePin(greenLED_GPIO_Port, greenLED_Pin, 0);
-	     break;
+	    	HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 1);
+	    	HAL_GPIO_WritePin(redLED_GPIO_Port, redLED_Pin, 0);
+	    	break;
 	    case 2:
+	    	HAL_GPIO_WritePin(greenLED_GPIO_Port, greenLED_Pin, 0);
+	    	HAL_GPIO_WritePin(orangeLED_GPIO_Port, orangeLED_Pin, 0);
+	    	HAL_GPIO_WritePin(redLED_GPIO_Port, redLED_Pin, 1);
+	    	break;
 	    break;
 	   }
 
@@ -246,7 +254,7 @@ void TimerInit(unsigned short first_durr)
  TIM10->PSC = 16800; //Set prescaler to 16800 (each tick is 0.1 millisec)
  TIM10->ARR = 60000; //Set auto-reload value to 60000 (close to maximum)
 //Set comparator value to the durration for the first state ms->0.1ms count
- TIM10->CCR1 = 10 * first_durr;
+ TIM10->CCR1 = first_durr;
  TIM10->CR1 |= 0x0081; //Enables the timer
 }
 /* USER CODE END 4 */

@@ -51,6 +51,7 @@ static void MX_GPIO_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 
+void myTimerInit(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
