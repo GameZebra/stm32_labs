@@ -67,6 +67,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	uint32_t status1 = 0;
+	uint8_t state = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -106,11 +107,20 @@ int main(void)
   {
 	  status1 = LL_TIM_IsActiveFlag_CC1(TIM10);
 	  if(status1){
-		  LL_GPIO_WriteOutputPort(greernLED_GPIO_Port, 0);
-	  }
-	  if(LL_TIM_GetAutoReload(TIM10)==LL_TIM_GetCounter(TIM10)){
-		  LL_GPIO_WriteOutputPort(greernLED_GPIO_Port, greernLED_Pin);
 		  LL_TIM_ClearFlag_CC1(TIM10);
+		  LL_TIM_SetCounter(TIM10, 0);
+		  state++;
+		  if(state > 2) state = 0;
+	  }
+	  switch(state){
+	  case 0:
+		  LL_GPIO_WriteOutputPort(greenLED_GPIO_Port, greenLED_Pin);
+		  break;
+	  case 1:
+		  LL_GPIO_WriteOutputPort(orangeLED_GPIO_Port, orangeLED_Pin);
+		  break;
+	  case 2:
+		  LL_GPIO_WriteOutputPort(redLED_GPIO_Port, redLED_Pin);
 	  }
 
     /* USER CODE END WHILE */
@@ -200,15 +210,15 @@ static void MX_GPIO_Init(void)
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD);
 
   /**/
-  LL_GPIO_ResetOutputPin(greernLED_GPIO_Port, greernLED_Pin);
+  LL_GPIO_ResetOutputPin(GPIOD, greenLED_Pin|orangeLED_Pin|redLED_Pin);
 
   /**/
-  GPIO_InitStruct.Pin = greernLED_Pin;
+  GPIO_InitStruct.Pin = greenLED_Pin|orangeLED_Pin|redLED_Pin;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  LL_GPIO_Init(greernLED_GPIO_Port, &GPIO_InitStruct);
+  LL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
