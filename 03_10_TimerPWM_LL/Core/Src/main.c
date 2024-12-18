@@ -122,16 +122,16 @@ int main(void)
 		  }
 		  switch(speedState){
 		  case 0:
-			  TIM4->CCR1 = 1000;
-			  TIM4->CCR2 = 3000;
-			  TIM4->CCR3 = 5000;
-			  TIM4->CCR4 = 8000;
+			  TIM4->CCR1 = 1000;	// 10% duty cycle
+			  TIM4->CCR2 = 3000;	// 30% duty cycle
+			  TIM4->CCR3 = 5000;	// 50% duty cycle
+			  TIM4->CCR4 = 8000;	// 100% duty cycle
 			  break;
 		  case 1:
-			  TIM4->CCR1 = 2500;
-			  TIM4->CCR2 = 5000;
-			  TIM4->CCR3 = 10000;
-			  TIM4->CCR4 = 10000;
+			  TIM4->CCR1 = 2500;	// 10% duty cycle
+			  TIM4->CCR2 = 5000;	// 50% duty cycle
+			  TIM4->CCR3 = 10000;	// 100% duty cycle
+			  TIM4->CCR4 = 10000;	// 100% duty cycle
 			  break;
 		  }
 
