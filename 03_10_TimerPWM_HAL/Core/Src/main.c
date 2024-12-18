@@ -67,7 +67,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	uint32_t b1State = 0;
+	uint32_t last = 0;
+	uint8_t speedState = 0x0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -106,7 +108,26 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  b1State = HAL_GPIO_ReadPin(userButton_GPIO_Port, userButton_Pin);
+	  if(((b1State & userButton_Pin) == userButton_Pin) && b1State != last){
+		  speedState ^= 0x1;
+	  }
+	  switch(speedState){
+	  case 0:
+		  TIM4->CCR1 = 100;
+		  TIM4->CCR2 = 300;
+		  TIM4->CCR3 = 500;
+		  TIM4->CCR4 = 800;
+		  break;
+	  case 1:
+		  TIM4->CCR1 = 250;
+		  TIM4->CCR2 = 500;
+		  TIM4->CCR3 = 750;
+		  TIM4->CCR4 = 1000;
+		  break;
+	  }
 
+	  last = b1State;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -229,12 +250,20 @@ static void MX_TIM4_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pin : userButton_Pin */
+  GPIO_InitStruct.Pin = userButton_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(userButton_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
