@@ -99,10 +99,10 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
-  TIM4->CCR1 = 100;
-  TIM4->CCR2 = 300;
-  TIM4->CCR3 = 500;
-  TIM4->CCR4 = 800;
+  LL_TIM_OC_SetCompareCH1(TIM4, 1000);
+  LL_TIM_OC_SetCompareCH2(TIM4, 3000);
+  LL_TIM_OC_SetCompareCH3(TIM4, 5000);
+  LL_TIM_OC_SetCompareCH4(TIM4, 8000);
 
   LL_TIM_CC_EnableChannel(TIM4, LL_TIM_CHANNEL_CH1);
   LL_TIM_CC_EnableChannel(TIM4, LL_TIM_CHANNEL_CH2);
@@ -122,16 +122,16 @@ int main(void)
 		  }
 		  switch(speedState){
 		  case 0:
-			  TIM4->CCR1 = 1000;	// 10% duty cycle
-			  TIM4->CCR2 = 3000;	// 30% duty cycle
-			  TIM4->CCR3 = 5000;	// 50% duty cycle
-			  TIM4->CCR4 = 8000;	// 100% duty cycle
+			  LL_TIM_OC_SetCompareCH1(TIM4, 1000);		// 10% duty cycle
+			  LL_TIM_OC_SetCompareCH2(TIM4, 3000);		// 30% duty cycle
+			  LL_TIM_OC_SetCompareCH3(TIM4, 5000);		// 50% duty cycle
+			  LL_TIM_OC_SetCompareCH4(TIM4, 10000);		// 100% duty cycle
 			  break;
 		  case 1:
-			  TIM4->CCR1 = 2500;	// 10% duty cycle
-			  TIM4->CCR2 = 5000;	// 50% duty cycle
-			  TIM4->CCR3 = 10000;	// 100% duty cycle
-			  TIM4->CCR4 = 10000;	// 100% duty cycle
+			  LL_TIM_OC_SetCompareCH1(TIM4, 2500);		// 25% duty cycle
+			  LL_TIM_OC_SetCompareCH2(TIM4, 5000);		// 50% duty cycle
+			  LL_TIM_OC_SetCompareCH3(TIM4, 10000);		// 100% duty cycle
+			  LL_TIM_OC_SetCompareCH4(TIM4, 10000);		// 100% duty cycle
 			  break;
 		  }
 
