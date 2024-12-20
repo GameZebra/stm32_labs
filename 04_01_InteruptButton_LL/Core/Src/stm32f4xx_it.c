@@ -217,6 +217,9 @@ void EXTI0_IRQHandler(void)
     else {
     	LL_TIM_OC_SetCompareCH1(TIM4, 500);
     }
+    // the update event will force update the registers
+    // and will reset the timer
+    LL_TIM_GenerateEvent_UPDATE(TIM4);
 
     /* USER CODE END LL_EXTI_LINE_0 */
   }
