@@ -211,6 +211,13 @@ void EXTI0_IRQHandler(void)
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_0);
     /* USER CODE BEGIN LL_EXTI_LINE_0 */
 
+    if(LL_TIM_OC_GetCompareCH1(TIM4) == 500){
+    	LL_TIM_OC_SetCompareCH1(TIM4, 800);
+    }
+    else {
+    	LL_TIM_OC_SetCompareCH1(TIM4, 500);
+    }
+
     /* USER CODE END LL_EXTI_LINE_0 */
   }
   /* USER CODE BEGIN EXTI0_IRQn 1 */

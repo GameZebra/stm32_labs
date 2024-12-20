@@ -96,7 +96,10 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+  LL_TIM_OC_SetCompareCH1(TIM4, 500);
+  LL_TIM_CC_EnableChannel(TIM4, LL_TIM_CHANNEL_CH1);
+  LL_TIM_EnableCounter(TIM4);
+  LL_TIM_GenerateEvent_UPDATE(TIM4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
