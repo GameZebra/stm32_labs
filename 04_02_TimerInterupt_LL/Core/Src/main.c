@@ -98,7 +98,7 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
 
-	LL_TIM_OC_SetCompareCH1(TIM10, 300);
+	LL_TIM_OC_SetCompareCH1(TIM10, 200);
 	LL_TIM_EnableIT_CC1(TIM10);
 	LL_TIM_EnableIT_UPDATE(TIM10);
 	LL_TIM_EnableCounter(TIM10);

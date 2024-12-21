@@ -204,12 +204,15 @@ void SysTick_Handler(void)
 void TIM1_UP_TIM10_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
+	// Clearing the flags
 	if((TIM10->SR & TIM_SR_UIF_Msk) == TIM_SR_UIF){
 		TIM10->SR ^= TIM_SR_UIF_Msk;
 	}
 	if((TIM10->SR & TIM_SR_CC1IF_Msk) == TIM_SR_CC1IF){
 		TIM10->SR ^= TIM_SR_CC1IF_Msk;
 	}
+	// if the flags aren't cleared fully the program will loop inside the interrupt
+
   /* USER CODE END TIM1_UP_TIM10_IRQn 0 */
 
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */
