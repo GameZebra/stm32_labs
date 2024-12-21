@@ -92,12 +92,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   TIM10->CCR1 = 100;
-  // Enable Compare Match Interrupt
-  __HAL_TIM_ENABLE_IT(&htim10, TIM_IT_CC1);
-  // Enable Update Interrupt
-  __HAL_TIM_ENABLE_IT(&htim10, TIM_IT_UPDATE);
 
-  // Start the Timer
+  // Enable Compare Match Interrupt
+  //__HAL_TIM_ENABLE_IT(&htim10, TIM_IT_CC1);
+
+  // Enable Update Interrupt
+  //__HAL_TIM_ENABLE_IT(&htim10, TIM_IT_UPDATE);
+
+  HAL_TIM_OC_Start_IT(&htim10, TIM_CHANNEL_1); //this way we also enable the gpio pin so be careful
   HAL_TIM_Base_Start_IT(&htim10); // Enable base timer with interrupts
 
 
