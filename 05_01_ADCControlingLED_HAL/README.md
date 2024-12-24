@@ -13,7 +13,7 @@ Multiplex vs standalone
 the only reason to use multiplexed chaels when you have enough ADCs is energy efficiency. Appart from that the most common use of multiplexed channels is that we don't have enough stand alone ADCs.
 
 Tips for multiplex chanels 
-
+We should make sure we have enough time for all the channels before we initiate the next measurment. The most important measurments should be set with the highes priority (the rank with the lowest number)
 
 
 
