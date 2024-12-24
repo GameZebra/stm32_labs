@@ -6,8 +6,13 @@ We can seperate the ADC in a couple of things, Analog signals are rearly stable 
 The core funciono of an ADC:
 The ADC has some pre-determined descrete levels which represent the physical voltage. This is represented by the bits of the ADC the more bits the ADC has it becomes more precise but it gets slower. 
 
+When ADC captures values
+The ADC can be setted up to capture as fast as if can, or it can be software triggerd, or triggered by Timer or external interupt. Prefferably Timer Triggered
 
+Multiplex vs standalone
+the only reason to use multiplexed chaels when you have enough ADCs is energy efficiency. Appart from that the most common use of multiplexed channels is that we don't have enough stand alone ADCs.
 
+Tips for multiplex chanels 
 
 
 
