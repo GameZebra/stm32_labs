@@ -67,7 +67,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	uint32_t someState = 0;
+	uint32_t adcValue = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -97,6 +98,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	   HAL_ADC_Start(&hadc1);
+	   someState = HAL_ADC_GetState(&hadc1);
+	   adcValue = HAL_ADC_GetValue(&hadc1);
+	   HAL_ADC_Stop(&hadc1);
+	   HAL_Delay(1000);
+
+
+	   // TODO circuit with voltages to measure
+	   // TODO documentation
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
