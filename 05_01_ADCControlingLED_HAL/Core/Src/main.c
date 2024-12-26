@@ -95,7 +95,7 @@ int main(void)
   while (1)
   {
 	  // Software ADC
-	  HAL_adc_star
+	  HAL_ADC_EnableBufferSensor_Cmd()star
 
 
     /* USER CODE END WHILE */
