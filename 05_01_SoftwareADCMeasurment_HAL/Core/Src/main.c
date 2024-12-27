@@ -102,7 +102,7 @@ int main(void)
 	   someState = HAL_ADC_GetState(&hadc1);
 	   adcValue = HAL_ADC_GetValue(&hadc1);
 	   HAL_ADC_Stop(&hadc1);
-	   HAL_Delay(1000);
+	   //HAL_Delay(1000);
 
 
 	   // TODO circuit with voltages to measure
