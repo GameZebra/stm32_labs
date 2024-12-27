@@ -107,12 +107,15 @@ int main(void)
   while (1)
   {
 	   HAL_ADC_Start(&hadc1);
-	   someState = HAL_ADC_GetState(&hadc1);
-	   adcValue = HAL_ADC_GetValue(&hadc1);
+	   if (HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) == HAL_OK)
+       {
+           // Read the ADC Value
+		   adcValue = HAL_ADC_GetValue(&hadc1);
+
+	 	   percentFilled = (int)((adcValue / 4096.0) * 1000);
+		   TIM4->CCR2 = percentFilled;
+       }
 	   HAL_ADC_Stop(&hadc1);
-	   percentFilled = (int)((adcValue / 4096.0) * 1000);
-	   TIM4->CCR2 = percentFilled;
-	   //HAL_Delay(1000);
 
 
 	   // TODO circuit with voltages to measure
@@ -212,7 +215,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -242,9 +245,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 48000;
+  htim4.Init.Prescaler = 0;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 1000;
+  htim4.Init.Period = 65535;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim4) != HAL_OK)
