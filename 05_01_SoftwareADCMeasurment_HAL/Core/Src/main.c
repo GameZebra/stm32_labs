@@ -69,6 +69,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	uint32_t someState = 0;
 	uint32_t adcValue = 0;
+	double percentFilled = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -102,6 +103,7 @@ int main(void)
 	   someState = HAL_ADC_GetState(&hadc1);
 	   adcValue = HAL_ADC_GetValue(&hadc1);
 	   HAL_ADC_Stop(&hadc1);
+	   percentFilled = (adcValue / 4096.0) * 100;
 	   //HAL_Delay(1000);
 
 
