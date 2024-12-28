@@ -125,9 +125,6 @@ int main(void)
 	   // connect the middle pin of the potentiometer to PA4
 	   // now when you turn the potentiometer the brightness of the Orange led will change
 
-	   // TODO documentation
-
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
