@@ -13,5 +13,16 @@ Tips for multiplex chanels We should make sure we have enough time for all the c
 
 **When creatig the project you should have internet or some of the libraries may not add. And they wouldn't add themselves no mater how hard you try. Recreating the same project did solved it for me.**
 
+**In order not to destroy your board use at most 3 volts for the measurments**
+
+
+
+Circuit with voltages to measure:
+
+We're using a potentiometer to change the voltage drop by hand. Preferably use 5k or 10k ohms to limit the current and limit the potential damage due to incompetance. 
+Connect the far sides of the potentiometer to GND and 3V!!!!!! (which is the Vref = VDD) 
+Connect the middle pin of the potentiometer to PA4
+Now when you turn the potentiometer the brightness of the Orange led will change
+
 
 

@@ -118,7 +118,13 @@ int main(void)
 	   HAL_ADC_Stop(&hadc1);
 
 
-	   // TODO circuit with voltages to measure
+	   // circuit with voltages to measure
+	   // We're using a potentiometer to change the voltage drop by hand
+	   // preferably use 5k or 10k ohms to limit the current and limit the potential damage due to incompetance
+	   // connect the far sides of the potentiometer to GND and 3V!!!!!! (which is the Vref = VDD)
+	   // connect the middle pin of the potentiometer to PA4
+	   // now when you turn the potentiometer the brightness of the Orange led will change
+
 	   // TODO documentation
 
 
