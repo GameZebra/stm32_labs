@@ -3,6 +3,6 @@ Very similar to the previous example just do 2 sequential readings, the HAL libr
 
 ![Schematic](pictures/schematic.jpeg)
 
-We have 2 potentiometers connected to 3V, GND and PA4 and PA%
+We have 2 potentiometers connected to 3V, GND and PA4 and PA5
 
 
