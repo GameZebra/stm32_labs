@@ -74,7 +74,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	uint32_t adcValue = 0;
-	uint8_t dutyCycle = 0;
+	uint8_t dutyCycle[1] = {0};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -113,12 +113,13 @@ int main(void)
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adcValue = HAL_ADC_GetValue(&hadc1);
-	  dutyCycle = (int)((adcValue / 4094.0) * 100);
+	  dutyCycle[0] = (int)((adcValue / 4094.0) * 100);
 	  HAL_ADC_Stop(&hadc1);
-	  TIM2->CCR1 = dutyCycle;
+	  TIM2->CCR1 = dutyCycle[0];
 
 
 	  // here starts the UART
+	  HAL_UART_Transmit(&huart2, dutyCycle, sizeof(dutyCycle), HAL_MAX_DELAY);
 
     /* USER CODE END WHILE */
 
