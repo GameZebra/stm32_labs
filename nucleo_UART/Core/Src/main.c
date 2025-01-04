@@ -100,6 +100,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
+
+
+  HAL_UART_Transmit(&huart2, hi, 10, 10);
   //HAL_UART_Receive_IT(&huart1, echo, 10);
 
   /* USER CODE END 2 */
@@ -116,13 +119,12 @@ int main(void)
 	  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 	  //HAL_Delay(500);
 
-	  HAL_UART_Transmit(&huart2, hi, 10, 10);
 	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 	  HAL_Delay(300);
 
 	  // restart reception
-	  HAL_UART_Receive(&huart1, echo, 10, 1000);
-	  HAL_UART_Transmit(&huart2, echo, 10, 10);
+	  HAL_UART_Receive(&huart1, echo, sizeof(echo), HAL_MAX_DELAY);
+	  HAL_UART_Transmit(&huart2, echo, sizeof(echo), HAL_MAX_DELAY);
 
 
     /* USER CODE END WHILE */

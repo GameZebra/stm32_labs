@@ -125,8 +125,9 @@ int main(void)
   while (1)
   {
 	  //example();
-	  HAL_UART_Transmit(&huart1, hi, 10, 10);
-	  HAL_Delay(1000);
+	  //HAL_UART_Transmit(&huart1, hi, 10, 10);
+	  example();
+	  HAL_Delay(10);
 	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
 
     /* USER CODE END WHILE */
