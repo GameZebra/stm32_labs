@@ -51,7 +51,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+void example(void);
+void example2(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -108,15 +109,6 @@ int main(void)
   //about this not sure
  // HAL_UART_Receive_IT(&huart1, received, 2);
 
-  void example(){
-	  uint8_t command[2] = {0x8, 0x8};
-	  uint8_t values[1] = {120};
-	  HAL_UART_Transmit(&huart1, command, 2, 1000);
-	  HAL_UART_Transmit(&huart1, values, 1, 1000);
-
-  }
-
-
 
   /* USER CODE END 2 */
 
@@ -126,9 +118,9 @@ int main(void)
   {
 	  //example();
 	  //HAL_UART_Transmit(&huart1, hi, 10, 10);
-	  example();
-	  HAL_Delay(10);
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+	  example2();
+	  //HAL_Delay(10);
+	  //HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
 
     /* USER CODE END WHILE */
 
@@ -241,7 +233,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void example(){
+	  uint8_t command[2] = {0x8, 0x8};
+	  uint8_t values[1] = {120};
+	  HAL_UART_Transmit(&huart1, command, 2, 100);
+	  HAL_UART_Transmit(&huart1, values, 1, 100);
+}
+void example2(){
 
+	  uint8_t mesage[3] = {0x8, 0x8, 120};
+	  HAL_UART_Transmit(&huart1, mesage, 3, 20);
+}
 /* USER CODE END 4 */
 
 /**

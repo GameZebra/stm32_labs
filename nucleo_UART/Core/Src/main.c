@@ -46,7 +46,7 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 uint8_t hi[10] = "nucleo\n\r";
 uint8_t hex[2] = {0x8, 0x8}; // can't see that on the terminal
-uint8_t echo[50];
+uint8_t echo[3] = {0x1, 0x3, 0x9};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,9 +100,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
-
-
-  HAL_UART_Transmit(&huart2, hi, 10, 10);
   //HAL_UART_Receive_IT(&huart1, echo, 10);
 
   /* USER CODE END 2 */
@@ -119,12 +116,18 @@ int main(void)
 	  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 	  //HAL_Delay(500);
 
-	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	  HAL_Delay(300);
+	  //HAL_UART_Transmit(&huart2, hi, 10, 10);
+	 //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+	  //HAL_Delay(300);
 
 	  // restart reception
-	  HAL_UART_Receive(&huart1, echo, sizeof(echo), HAL_MAX_DELAY);
-	  HAL_UART_Transmit(&huart2, echo, sizeof(echo), HAL_MAX_DELAY);
+	  HAL_UART_Receive(&huart1, echo, sizeof(echo), 10);
+	  HAL_UART_Transmit(&huart2, echo, sizeof(echo), 10);
+	  uint8_t  *test = echo;
+	  *test += 1;
+	  test += 1;
+	  *test +=2;
+	  HAL_Delay(1000);
 
 
     /* USER CODE END WHILE */
