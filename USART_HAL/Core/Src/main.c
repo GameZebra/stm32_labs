@@ -93,8 +93,6 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Transmit(&huart1, hi, 10, 1000);
-  HAL_Delay(10);
 
   // important commands
   // 0x83 read conf params

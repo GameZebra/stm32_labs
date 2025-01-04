@@ -123,11 +123,7 @@ int main(void)
 	  // restart reception
 	  HAL_UART_Receive(&huart1, echo, sizeof(echo), 10);
 	  HAL_UART_Transmit(&huart2, echo, sizeof(echo), 10);
-	  uint8_t  *test = echo;
-	  *test += 1;
-	  test += 1;
-	  *test +=2;
-	  HAL_Delay(1000);
+
 
 
     /* USER CODE END WHILE */
