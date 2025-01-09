@@ -103,7 +103,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+
+  TIM2->CCR1 = duty;
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 
   //HAL_UART_Receive_IT(&huart1, echo, 10);
 
@@ -113,22 +115,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //serial_print(hi, 10);
-	  //HAL_Delay(500);
-	  //HAL_UART_Transmit(&huart2, hex, 2, 10);
+	  // echo program
+	  // HAL_UART_Receive(&huart1, echo, sizeof(echo), 10);
+	  // HAL_UART_Transmit(&huart2, echo, sizeof(echo), 10);
 
-	  // blinking
-	  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	  //HAL_Delay(500);
+	  // receive & send duty
+	  HAL_UART_Receive(&huart2, &duty, 1, 20);
+	  HAL_UART_Transmit(&huart1, &duty, 1, 20);
 
-	  //HAL_UART_Transmit(&huart2, hi, 10, 10);
-	 //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	  //HAL_Delay(300);
-
-	  // restart reception
-	  HAL_UART_Receive(&huart1, echo, sizeof(echo), 10);
-	  HAL_UART_Transmit(&huart2, echo, sizeof(echo), 10);
-
+	  // LED duty sync
+	  TIM2->CCR1 = duty;
 
 
     /* USER CODE END WHILE */
@@ -200,7 +196,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 16;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4294967295;
+  htim2.Init.Period = 1000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
@@ -313,19 +309,19 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//{
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(huart);
+  //UNUSED(huart);
 
   // echos imput
-  HAL_UART_Transmit(&huart2, echo, 10, 10);
-  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-  HAL_Delay(300);
+  //HAL_UART_Transmit(&huart2, echo, 10, 10);
+  //HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+  //HAL_Delay(300);
 
-  // restart reception
-  HAL_UART_Receive_IT(&huart1, echo, 10);
-}
+  //// restart reception
+  //HAL_UART_Receive_IT(&huart1, echo, 10);
+//}
 
 
 void serial_print(uint8_t data[], uint8_t size){
