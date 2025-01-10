@@ -118,7 +118,7 @@ int main(void)
 	  duty = (int)((adcValue / 4096.0) * 100);
 	  HAL_ADC_Stop(&hadc2);
 
-	  HAL_UART_Transmit(&huart1, &duty, 1, 10);
+	  HAL_UART_Transmit(&huart1, &duty, 1, HAL_MAX_DELAY);
 	  TIM4->CCR4 = duty;
 
     /* USER CODE END WHILE */

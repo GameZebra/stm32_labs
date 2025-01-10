@@ -109,8 +109,10 @@ int main(void)
   while (1)
   {
 	  // receive & send duty
-	  HAL_UART_Receive(&huart2, &duty, 1, 20);
-	  HAL_UART_Transmit(&huart1, &duty, 1, 20);
+	  //HAL_UART_Receive(&huart2, &duty, 1, 20);
+	  //HAL_UART_Transmit(&huart1, &duty, 1, 20);
+
+	  HAL_UART_Receive(&huart1, &duty, 1, 20);
 
 	  // LED duty sync
 	  TIM2->CCR1 = duty;
