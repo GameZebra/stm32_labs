@@ -140,6 +140,10 @@ int main(void)
 		  }
 		  // second way
 		  HAL_UART_Receive(&huart1, &duty, 1, 20);
+		  if (duty == 200){
+			  HAL_GPIO_EXTI_Callback(statusButton_Pin);
+			  // continue;
+		  }
 	  }
 
 	  // LED duty sync
@@ -346,6 +350,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   /* NOTE: This function Should not be modified, when the callback is needed,
            the HAL_GPIO_EXTI_Callback could be implemented in the user file
    */
+
+  HAL_UART_Transmit(&huart1, 200, 1, HAL_MAX_DELAY);
   status ^= 0x1;
   isFirst = 1;
 
