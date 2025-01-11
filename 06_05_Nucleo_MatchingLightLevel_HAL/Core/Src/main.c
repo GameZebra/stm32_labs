@@ -47,6 +47,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+uint8_t status;
+uint8_t isFirst;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,6 +76,8 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   uint8_t duty = 10;
+  status = 0x1;
+  isFirst = 0x1;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -108,11 +112,35 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // receive & send duty
-	  //HAL_UART_Receive(&huart2, &duty, 1, 20);
-	  //HAL_UART_Transmit(&huart1, &duty, 1, 20);
 
-	  HAL_UART_Receive(&huart1, &duty, 1, 20);
+	  if(status == 1){
+		  if(isFirst == 1){
+			  TIM2->CCR1 = 100;
+			  HAL_Delay(100);
+			  TIM2->CCR1 = 0;
+			  HAL_Delay(100);
+			  isFirst = 0;
+		  }
+		  // first way
+		  // receive & send duty
+		  HAL_UART_Receive(&huart2, &duty, 1, 20);
+		  HAL_UART_Transmit(&huart1, &duty, 1, 20);
+	  }
+	  else if (status == 0){
+		  if(isFirst == 1){
+			  TIM2->CCR1 = 100;
+			  HAL_Delay(100);
+			  TIM2->CCR1 = 0;
+			  HAL_Delay(100);
+			  TIM2->CCR1 = 100;
+			  HAL_Delay(100);
+			  TIM2->CCR1 = 0;
+			  HAL_Delay(100);
+			  isFirst = 0;
+		  }
+		  // second way
+		  HAL_UART_Receive(&huart1, &duty, 1, 20);
+	  }
 
 	  // LED duty sync
 	  TIM2->CCR1 = duty;
@@ -287,18 +315,46 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin : statusButton_Pin */
+  GPIO_InitStruct.Pin = statusButton_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(statusButton_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(GPIO_Pin);
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the HAL_GPIO_EXTI_Callback could be implemented in the user file
+   */
+  status ^= 0x1;
+  isFirst = 1;
+
+  // Don't use HAL_Delay here
+  // Something wrong happens with GetTick inside if you want delay here use custom function
+  // that subtracts numbers that you have calculated the time of
+
+}
+
 
 /* USER CODE END 4 */
 
