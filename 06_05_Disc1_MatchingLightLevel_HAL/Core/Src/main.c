@@ -123,7 +123,7 @@ int main(void)
 		HAL_UART_Receive(&huart1, &duty, 1, 20);
 		if (duty == 200){
 			HAL_GPIO_EXTI_Callback(statusButton_Pin);
-			// continue;
+			//continue;
 		}
 		TIM4->CCR4 = duty;
 	  }
@@ -146,8 +146,16 @@ int main(void)
 		  duty = (int)((adcValue / 4096.0) * 100);
 		  HAL_ADC_Stop(&hadc2);
 
+
 		  HAL_UART_Transmit(&huart1, &duty, 1, HAL_MAX_DELAY);
+		  HAL_UART_Receive(&huart1, &duty, 1, 20);
+
 		  TIM4->CCR4 = duty;
+
+		  if (duty == 200){
+			  HAL_GPIO_EXTI_Callback(statusButton_Pin);
+			  // continue;
+		  }
 	  }
 
 
