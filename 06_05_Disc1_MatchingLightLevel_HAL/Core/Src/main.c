@@ -48,6 +48,8 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
+uint8_t status;
+uint8_t isFirst;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,6 +77,8 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	uint8_t duty = 10;
 	uint16_t adcValue = 0;
+	status = 0x1;
+	isFirst = 0x1;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -107,19 +111,42 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // first way
-	//HAL_UART_Receive(&huart1, &duty, 1, HAL_MAX_DELAY);
-	//TIM4->CCR4 = duty;
+	  if(status == 1){
+		  if(isFirst == 1){
+			  TIM4->CCR4 = 100;
+			  HAL_Delay(100);
+			  TIM4->CCR4 = 0;
+			  HAL_Delay(100);
+			  isFirst = 0;
+		  }
+		// first way
+		HAL_UART_Receive(&huart1, &duty, 1, 20);
+		TIM4->CCR4 = duty;
+	  }
+	  else if (status == 0){
+		  if(isFirst == 1){
+			  TIM4->CCR4 = 100;
+			  HAL_Delay(100);
+			  TIM4->CCR4 = 0;
+			  HAL_Delay(100);
+			  TIM4->CCR4 = 100;
+			  HAL_Delay(100);
+			  TIM4->CCR4 = 0;
+			  HAL_Delay(100);
+			  isFirst = 0;
+		  }
+		  // second way
+		  HAL_ADC_Start(&hadc2);
+		  HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+		  adcValue = HAL_ADC_GetValue(&hadc2);
+		  duty = (int)((adcValue / 4096.0) * 100);
+		  HAL_ADC_Stop(&hadc2);
 
-	  //second way
-	  HAL_ADC_Start(&hadc2);
-	  HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
-	  adcValue = HAL_ADC_GetValue(&hadc2);
-	  duty = (int)((adcValue / 4096.0) * 100);
-	  HAL_ADC_Stop(&hadc2);
+		  HAL_UART_Transmit(&huart1, &duty, 1, HAL_MAX_DELAY);
+		  TIM4->CCR4 = duty;
+	  }
 
-	  HAL_UART_Transmit(&huart1, &duty, 1, HAL_MAX_DELAY);
-	  TIM4->CCR4 = duty;
+
 
     /* USER CODE END WHILE */
 
@@ -310,6 +337,7 @@ static void MX_USART1_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
@@ -318,12 +346,36 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
+  /*Configure GPIO pin : statusButton_Pin */
+  GPIO_InitStruct.Pin = statusButton_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(statusButton_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(GPIO_Pin);
+  /* NOTE: This function Should not be modified, when the callback is needed,
+           the HAL_GPIO_EXTI_Callback could be implemented in the user file
+   */
+  status ^= 0x1;
+  isFirst = 1;
 
+  // Don't use HAL_Delay here
+  // Something wrong happens with GetTick inside if you want delay here use custom function
+  // that subtracts numbers that you have calculated the time of
+
+}
 /* USER CODE END 4 */
 
 /**
