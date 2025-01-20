@@ -12,11 +12,23 @@ The first two digits poit to the general theme of the project`
 04 - interupts
 05 - ADC
 06 - serial comunication
-
+07 - built-in accelerometer 
 
 and the second two poit to specific task that is performed
 All folders have their own README.md files that explain what i have done and/or key insights/ personal preferences so go check them out
 
 
+TODO: (at some time)
+ * SPI comunication
+ * DMA
+ * using the flash memmory
+ * CAM
+ * Ethernet
+ * e2c
+ * USB
+ * audio with the headphone jack
+ * DCMI (whatever that is)
+ * RNG and CRC
 
+ 
 
