@@ -148,7 +148,7 @@ int main(void)
 
 
 		  HAL_UART_Transmit(&huart1, &duty, 1, HAL_MAX_DELAY);
-		  HAL_UART_Receive(&huart1, &duty, 1, 20);
+		  //HAL_UART_Receive(&huart1, &duty, 1, 20);
 
 		  TIM4->CCR4 = duty;
 
