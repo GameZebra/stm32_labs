@@ -130,8 +130,8 @@ int main(void)
 
 		  HAL_UART_Receive(&huart1, &duty, 1, 20);
 		  if (duty == 200){
-			  HAL_GPIO_EXTI_Callback(statusButton_Pin);
-			  // continue;
+			  status ^= 0x1;
+			  isFirst = 1;
 		  }
 		  else
 			  duty = dutyOld;
@@ -151,8 +151,9 @@ int main(void)
 		  // second way
 		  HAL_UART_Receive(&huart1, &duty, 1, 20);
 		  if (duty == 200){
-			  HAL_GPIO_EXTI_Callback(statusButton_Pin);
-			  // continue;
+			  status ^= 0x1;
+			  isFirst = 1;
+
 		  }
 	  }
 
