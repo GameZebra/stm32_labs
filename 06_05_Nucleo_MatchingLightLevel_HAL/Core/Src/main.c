@@ -78,6 +78,7 @@ int main(void)
   uint8_t duty = 10;
   status = 0x0;
   isFirst = 0x1;
+  uint8_t dutyOld = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -124,12 +125,16 @@ int main(void)
 		  // first way
 		  // receive & send duty
 		  HAL_UART_Receive(&huart2, &duty, 1, 20);
+		  dutyOld = duty;
 		  HAL_UART_Transmit(&huart1, &duty, 1, 20);
+
 		  HAL_UART_Receive(&huart1, &duty, 1, 20);
 		  if (duty == 200){
 			  HAL_GPIO_EXTI_Callback(statusButton_Pin);
 			  // continue;
 		  }
+		  else
+			  duty = dutyOld;
 	  }
 	  else if (status == 0){
 		  if(isFirst == 1){
