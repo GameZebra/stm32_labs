@@ -75,7 +75,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  uint8_t duty = 0;
+  uint16_t adcValue = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -101,6 +102,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  TIM4->CCR1 = duty;
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 
   /* USER CODE END 2 */
 
@@ -108,6 +111,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_ADC_Start(&hadc1);
+	  HAL_ADC_PollForConversion(&hadc1, 100);
+	  adcValue = HAL_ADC_GetValue(&hadc1);
+	  duty = (adcValue/4096.1) * 100;
+	  HAL_ADC_Stop(&hadc1);
+
+	  TIM4->CCR1 = duty;
+	  // HAL_UART_Transmit(&huart2, duty, 1, 20);
+	  // HAL_UART_Transmit(&huart1, duty, 1, 20);	// does channel 1 work or i have fried it?
+	  // HAL_UART_Transmit(&huart1, ", ", 2, 20);
+
+
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
