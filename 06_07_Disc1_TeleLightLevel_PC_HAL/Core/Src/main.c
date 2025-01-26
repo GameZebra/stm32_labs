@@ -118,7 +118,7 @@ int main(void)
 	  HAL_ADC_Stop(&hadc1);
 
 	  TIM4->CCR1 = duty;
-	  // HAL_UART_Transmit(&huart2, duty, 1, 20);
+	  HAL_UART_Transmit(&huart2, &duty, 1, 20);
 	  // HAL_UART_Transmit(&huart1, duty, 1, 20);	// does channel 1 work or i have fried it?
 	  // HAL_UART_Transmit(&huart1, ", ", 2, 20);
 
