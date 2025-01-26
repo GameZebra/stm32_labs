@@ -44,8 +44,8 @@ ADC_HandleTypeDef hadc1;
 
 TIM_HandleTypeDef htim4;
 
-UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
@@ -56,9 +56,11 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM4_Init(void);
-static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
+
+void toString(char str[2], uint8_t num);
 
 /* USER CODE END PFP */
 
@@ -77,6 +79,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
   uint8_t duty = 0;
   uint16_t adcValue = 0;
+  char strDuty[3];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -99,11 +102,12 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_TIM4_Init();
-  MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   TIM4->CCR1 = duty;
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+
 
   /* USER CODE END 2 */
 
@@ -119,8 +123,13 @@ int main(void)
 
 	  TIM4->CCR1 = duty;
 	  HAL_UART_Transmit(&huart2, &duty, 1, 20);
-	  // HAL_UART_Transmit(&huart1, duty, 1, 20);	// does channel 1 work or i have fried it?
-	  // HAL_UART_Transmit(&huart1, ", ", 2, 20);
+
+
+	  toString(strDuty, duty);
+	  HAL_UART_Transmit(&huart3, strDuty, 3, 100);
+	  HAL_UART_Transmit(&huart3, ",", 1, 10);
+	  // does channel 1 work or i have fried it? nope :'(
+
 
 
 
@@ -274,39 +283,6 @@ static void MX_TIM4_Init(void)
 }
 
 /**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART1_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART1_Init 0 */
-
-  /* USER CODE END USART1_Init 0 */
-
-  /* USER CODE BEGIN USART1_Init 1 */
-
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART1_Init 2 */
-
-  /* USER CODE END USART1_Init 2 */
-
-}
-
-/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -340,6 +316,39 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -352,6 +361,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -359,6 +369,49 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void toString(char str[3], uint8_t num){
+
+	for(int i = 2; i >= 0; i--){
+		if(num % 10 == 0){
+			str[i] = '0';
+		}
+		else if (num % 10 == 1){
+			str[i] = '1';
+		}
+		else if (num % 10 == 2){
+			str[i] = '2';
+		}
+		else if (num % 10 == 3){
+			str[i] = '3';
+		}
+		else if (num % 10 == 4){
+			str[i] = '4';
+		}
+		else if (num % 10 == 5){
+			str[i] = '5';
+		}
+		else if (num % 10 == 6){
+			str[i] = '6';
+		}
+		else if (num % 10 == 7){
+			str[i] = '7';
+		}
+		else if (num % 10 == 8){
+			str[i] = '8';
+		}
+		else if (num % 10 == 9){
+			str[i] = '9';
+		}
+		else{
+			str[i] = '*';
+		}
+		num = num / 10;
+	}
+
+
+}
+
+
 
 /* USER CODE END 4 */
 
