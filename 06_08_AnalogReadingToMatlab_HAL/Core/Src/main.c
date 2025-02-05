@@ -54,7 +54,7 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+void toString(char str[4], uint8_t num);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -72,6 +72,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
   uint32_t adcValue = 0;
   char strDuty[4];
+  char endStr = '\n';
 
 
   /* USER CODE END 1 */
@@ -113,8 +114,8 @@ int main(void)
       }
 	   HAL_ADC_Stop(&hadc1);
 	   toString(strDuty, adcValue);
-	   HAL_UART_Transmit(&huart2, &strDuty, 4, 100);
-	   HAL_UART_Transmit(&huart2, "\n", 1, 10);
+	   HAL_UART_Transmit(&huart2, strDuty, 4, 100);
+	   HAL_UART_Transmit(&huart2, &endStr, 1, 10);
 
     /* USER CODE END WHILE */
 
