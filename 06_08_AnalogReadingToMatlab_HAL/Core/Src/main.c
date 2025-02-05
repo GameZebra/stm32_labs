@@ -72,7 +72,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
   uint32_t adcValue = 0;
   char strDuty[4];
-  char endStr = '\n';
+  char endStr = ',';
 
 
   /* USER CODE END 1 */
