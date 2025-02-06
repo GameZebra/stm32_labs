@@ -118,7 +118,7 @@ int main(void)
 	   // i have to send numbers not strings
 	   HAL_UART_Transmit(&huart2, &adcValue, 4, 100);
 	   //HAL_UART_Transmit(&huart2, &endStr, 1, 10);
-	   HAL_Delay(10);
+	   HAL_Delay(100);
 	   // for lower delays like 10ms MatLab plot function is too slow
 	   // Probably will require to send data in bulk
 
