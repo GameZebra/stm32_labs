@@ -46,6 +46,9 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+uint32_t adcValue = 0;
+char strDuty[5];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -54,7 +57,7 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void toString(char str[4], uint8_t num);
+void toString(char str[5], uint32_t num);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -70,8 +73,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  uint32_t adcValue = 0;
-  char strDuty[4];
   char endStr = ',';
 
 
@@ -113,9 +114,10 @@ int main(void)
 
       }
 	   HAL_ADC_Stop(&hadc1);
-	   toString(strDuty, adcValue);
-	   HAL_UART_Transmit(&huart2, strDuty, 4, 100);
-	   HAL_UART_Transmit(&huart2, &endStr, 1, 10);
+	   // toString(strDuty, adcValue);
+	   HAL_UART_Transmit(&huart2, &adcValue, 4, 100);
+	   //HAL_UART_Transmit(&huart2, &endStr, 1, 10);
+	   HAL_Delay(100);
 
     /* USER CODE END WHILE */
 
@@ -268,7 +270,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void toString(char str[4], uint8_t num){
+void toString(char str[5], uint32_t num){
 
 	for(int i = 3; i >= 0; i--){
 		if(num % 10 == 0){
@@ -306,7 +308,7 @@ void toString(char str[4], uint8_t num){
 		}
 		num = num / 10;
 	}
-
+	str[4] = '\0';
 
 }
 
