@@ -52,8 +52,9 @@ uint16_t accX = 0;
 uint16_t accY = 0;
 uint16_t accZ = 0;
 
-uint8_t enableAcc = 0x20;
-uint8_t enableDRY = 0x23;
+uint8_t isEnabled = 0;
+uint8_t enableAcc[2] = {0x20, 0x67};
+uint8_t enableDRY[2] = {0x23, 0xC8};
 uint8_t status = 0;
 uint8_t data[6];
 
@@ -104,17 +105,34 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
+
+  HAL_Delay(100);
   // which is my accelerometer?
-  ACCEL_CS_LOW();                  // Enable SPI communication
-  HAL_SPI_Transmit(&hspi1, &reg, 1, HAL_MAX_DELAY);  // Send register address
-  HAL_SPI_Receive(&hspi1, &id, 1, HAL_MAX_DELAY);    // Receive the ID
+  //ACCEL_CS_LOW();                  // Enable SPI communication
+  //HAL_SPI_Transmit(&hspi1, &reg, 1, HAL_MAX_DELAY);  // Send register address
+  //HAL_SPI_Receive(&hspi1, &id, 1, HAL_MAX_DELAY);    // Receive the ID
+  //ACCEL_CS_HIGH();
+
+  ACCEL_CS_LOW();
+  HAL_SPI_Transmit(&hspi1, enableAcc[0] | 0x80, 1, HAL_MAX_DELAY);
+  HAL_SPI_Receive(&hspi1, &isEnabled, 1, HAL_MAX_DELAY);
+  ACCEL_CS_HIGH();
 
   //initial setup
-  HAL_SPI_Transmit(&hspi1, enableAcc, 1, HAL_MAX_DELAY);
-  HAL_SPI_Transmit(&hspi1, 0x67, 1, 10);
-  HAL_SPI_Transmit(&hspi1, enableDRY, 1, HAL_MAX_DELAY);
-  HAL_SPI_Transmit(&hspi1, 0xC8, 1, 10); //what is DRY
-  ACCEL_CS_HIGH();                 // Disable
+  ACCEL_CS_LOW();
+  HAL_SPI_Transmit(&hspi1, enableAcc[0] & 0x3F, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&hspi1, enableAcc[1], 1, HAL_MAX_DELAY);
+  ACCEL_CS_HIGH();
+
+  ACCEL_CS_LOW();
+  HAL_SPI_Transmit(&hspi1, enableAcc[0] | 0x80, 1, HAL_MAX_DELAY);
+  HAL_SPI_Receive(&hspi1, &isEnabled, 1, HAL_MAX_DELAY);
+  ACCEL_CS_HIGH();
+
+
+  //ACCEL_CS_LOW();
+  //HAL_SPI_Transmit(&hspi1, enableDRY, 2, HAL_MAX_DELAY);
+  //ACCEL_CS_HIGH();                 // Disable
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -174,7 +192,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV4;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
