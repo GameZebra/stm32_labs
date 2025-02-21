@@ -113,19 +113,23 @@ int main(void)
   //HAL_SPI_Receive(&hspi1, &id, 1, HAL_MAX_DELAY);    // Receive the ID
   //ACCEL_CS_HIGH();
 
+  uint8_t msg = (enableAcc[0] | 0x80);
   ACCEL_CS_LOW();
-  HAL_SPI_Transmit(&hspi1, enableAcc[0] | 0x80, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);
   HAL_SPI_Receive(&hspi1, &isEnabled, 1, HAL_MAX_DELAY);
   ACCEL_CS_HIGH();
 
   //initial setup
   ACCEL_CS_LOW();
-  HAL_SPI_Transmit(&hspi1, enableAcc[0] & 0x3F, 1, HAL_MAX_DELAY);
-  HAL_SPI_Transmit(&hspi1, enableAcc[1], 1, HAL_MAX_DELAY);
+  msg = (enableAcc[0] & 0x3F);
+  HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&hspi1, &enableAcc[1], 1, HAL_MAX_DELAY);
   ACCEL_CS_HIGH();
 
+
+  msg = (enableAcc[0] | 0x80);
   ACCEL_CS_LOW();
-  HAL_SPI_Transmit(&hspi1, enableAcc[0] | 0x80, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);
   HAL_SPI_Receive(&hspi1, &isEnabled, 1, HAL_MAX_DELAY);
   ACCEL_CS_HIGH();
 
@@ -139,20 +143,21 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	ACCEL_CS_LOW();
-	HAL_SPI_Transmit(&hspi1, 0x27, 1, 10);
-	HAL_SPI_Receive(&hspi1, &status, 1, 10);
-	ACCEL_CS_HIGH();
+	//ACCEL_CS_LOW();
+	//HAL_SPI_Transmit(&hspi1, 0x27, 1, 10);
+	//HAL_SPI_Receive(&hspi1, &status, 1, 10);
+	//ACCEL_CS_HIGH();
 	for(short i = 0; i<6; i++){
+		msg = accReg[i] | 0x80;
 		ACCEL_CS_LOW();                  // Enable SPI communication
-		HAL_SPI_Transmit(&hspi1, &accReg[i], 1, HAL_MAX_DELAY);  // Send register address
+		HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);  // Send register address
 		HAL_SPI_Receive(&hspi1, &data[i], 1, HAL_MAX_DELAY);    // Receive the ID
 		ACCEL_CS_HIGH();                 // Disable SPI
 	}
 
-	accX = data[0] | (data[1] << 7);
-	accY = data[2] | (data[3] << 7);
-	accZ = data[4] | (data[5] << 7);
+	accX = data[0] | (data[1] << 8);
+	accY = data[2] | (data[3] << 8);
+	accZ = data[4] | (data[5] << 8);
 
 
     /* USER CODE END WHILE */
