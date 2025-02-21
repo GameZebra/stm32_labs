@@ -47,6 +47,16 @@ SPI_HandleTypeDef hspi1;
 /* USER CODE BEGIN PV */
 uint8_t reg = 0x0F | 0x80;  // WHO_AM_I register (0x0F) with read bit (0x80)
 uint8_t id = 0x0;
+uint8_t accReg [6] = {0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D};
+uint16_t accX = 0;
+uint16_t accY = 0;
+uint16_t accZ = 0;
+
+uint8_t enableAcc = 0x20;
+uint8_t enableDRY = 0x23;
+uint8_t status = 0;
+uint8_t data[6];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,18 +104,38 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
+  // which is my accelerometer?
+  ACCEL_CS_LOW();                  // Enable SPI communication
+  HAL_SPI_Transmit(&hspi1, &reg, 1, HAL_MAX_DELAY);  // Send register address
+  HAL_SPI_Receive(&hspi1, &id, 1, HAL_MAX_DELAY);    // Receive the ID
+
+  //initial setup
+  HAL_SPI_Transmit(&hspi1, enableAcc, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&hspi1, 0x67, 1, 10);
+  HAL_SPI_Transmit(&hspi1, enableDRY, 1, HAL_MAX_DELAY);
+  HAL_SPI_Transmit(&hspi1, 0xC8, 1, 10); //what is DRY
+  ACCEL_CS_HIGH();                 // Disable
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	ACCEL_CS_LOW();
+	HAL_SPI_Transmit(&hspi1, 0x27, 1, 10);
+	HAL_SPI_Receive(&hspi1, &status, 1, 10);
+	ACCEL_CS_HIGH();
+	for(short i = 0; i<6; i++){
+		ACCEL_CS_LOW();                  // Enable SPI communication
+		HAL_SPI_Transmit(&hspi1, &accReg[i], 1, HAL_MAX_DELAY);  // Send register address
+		HAL_SPI_Receive(&hspi1, &data[i], 1, HAL_MAX_DELAY);    // Receive the ID
+		ACCEL_CS_HIGH();                 // Disable SPI
+	}
 
+	accX = data[0] | (data[1] << 7);
+	accY = data[2] | (data[3] << 7);
+	accZ = data[4] | (data[5] << 7);
 
-	ACCEL_CS_LOW();                  // Enable SPI communication
-	HAL_SPI_Transmit(&hspi1, &reg, 1, HAL_MAX_DELAY);  // Send register address
-	HAL_SPI_Receive(&hspi1, &id, 1, HAL_MAX_DELAY);    // Receive the ID
-	ACCEL_CS_HIGH();                 // Disable SPI
 
     /* USER CODE END WHILE */
 
