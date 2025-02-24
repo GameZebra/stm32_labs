@@ -51,6 +51,7 @@ uint8_t accReg [6] = {0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D};
 int16_t accX = 0;
 int16_t accY = 0;
 int16_t accZ = 0;
+double accValues[3];
 
 uint8_t isEnabled = 0;
 uint8_t enableAcc[2] = {0x20, 0x67};
@@ -166,10 +167,13 @@ int main(void)
 		HAL_Delay(10);
 	}
 
-	accX = data[0] | (data[1] << 8);
-	accY = data[2] | (data[3] << 8);
-	accZ = data[4] | (data[5] << 8);
+	accX = (data[0] | (data[1] << 8));
+	accY = (data[2] | (data[3] << 8));
+	accZ = (data[4] | (data[5] << 8));
 
+	accValues[0] = (accX / 32767.0) * 2;
+	accValues[1] = (accY / 32767.0) * 2;
+	accValues[2] = (accZ / 32767.0) * 2;
 	HAL_Delay(10);
 
     /* USER CODE END WHILE */
