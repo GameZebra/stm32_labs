@@ -125,13 +125,14 @@ int main(void)
   HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);
   HAL_SPI_Transmit(&hspi1, &enableAcc[1], 1, HAL_MAX_DELAY);
   ACCEL_CS_HIGH();
-
+  HAL_Delay(10);
 
   msg = (enableAcc[0] | 0x80);
   ACCEL_CS_LOW();
   HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);
   HAL_SPI_Receive(&hspi1, &isEnabled, 1, HAL_MAX_DELAY);
   ACCEL_CS_HIGH();
+  HAL_Delay(10);
 
 
   msg = enableDRY[0] & 0x3F;
@@ -139,17 +140,18 @@ int main(void)
   HAL_SPI_Transmit(&hspi1, &msg, 1, HAL_MAX_DELAY);
   HAL_SPI_Transmit(&hspi1, &enableDRY[1], 1, HAL_MAX_DELAY);
   ACCEL_CS_HIGH();                 // Disable
+  HAL_Delay(10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	msg = 0x27 & 0x3F;
-	ACCEL_CS_LOW();
-	HAL_SPI_Transmit(&hspi1, &msg, 1, 10);
-	HAL_SPI_Receive(&hspi1, &status, 1, 10);
-	ACCEL_CS_HIGH();
+	//msg = 0x27 & 0x3F;
+	//ACCEL_CS_LOW();
+	//HAL_SPI_Transmit(&hspi1, &msg, 1, 10);
+	//HAL_SPI_Receive(&hspi1, &status, 1, 10);
+	//ACCEL_CS_HIGH();
 	for(short i = 0; i<6; i++){
 		msg = accReg[i] | 0x80;
 		ACCEL_CS_LOW();                  // Enable SPI communication
@@ -158,10 +160,11 @@ int main(void)
 		ACCEL_CS_HIGH();                 // Disable SPI
 	}
 
-	accX = data[0] | (data[1] << 8);
-	accY = data[2] | (data[3] << 8);
-	accZ = data[4] | (data[5] << 8);
+	accX = data[0] << 8 | (data[1]);
+	accY = data[2] << 8 | (data[3]);
+	accZ = data[4] << 8 | (data[5]);
 
+	HAL_Delay(10);
 
     /* USER CODE END WHILE */
 
