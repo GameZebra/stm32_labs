@@ -53,6 +53,7 @@ dkms.conf
 
 # STM32 CUBE IDE metatdata (I don't know if it is important or not)
 .metadata/
+.metadata_backup/
 RemoteSystemsTempFiles/
 .settings/
 Debug/
