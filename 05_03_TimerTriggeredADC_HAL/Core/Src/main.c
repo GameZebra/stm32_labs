@@ -237,7 +237,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 4095;
+  htim1.Init.Period = 10;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -361,7 +361,8 @@ static void MX_GPIO_Init(void)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
 	adcValue = (uint16_t)HAL_ADC_GetValue(&hadc1);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, adcValue);
+	uint8_t scaled = (uint8_t)(((adcValue / 4096.0) *10)+0.5f);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, scaled);
 }
 
 
