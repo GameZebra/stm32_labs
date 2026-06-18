@@ -29,7 +29,7 @@ Additionally, **Timer 1 (TIM1) Channel 4** is configured as an output on pin **P
 ### 1. Timer 8 (TIM8) - The Trigger
 * Configured in **Master Mode**.
 * **Trigger Output (TRGO) Parameters:** Set to *Update Event*.
-* The timer is set to auto reload value 10, which gives us 10% resolution (0.3V), and the unneceserily small timer period of 130 nS.
+* The timer is set to auto reload value 10, which gives us 10% resolution (0.3V), and the unneceserily small timer period of 65 nS.
 * You can make the timer follow the ADC better by changing the auto reload value to 4095 and removing the conversion in the ADC callback function.
 
 ### 2. ADC1 - The Sampler
