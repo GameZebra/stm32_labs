@@ -82,7 +82,7 @@ HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&(htim1.Instance->CCR4), 1);
 
 /* USER CODE END 2 */
-
+```
 
 ## Architectural Concerns & Risks
 While a 0% CPU pipeline is incredibly elegant, executing direct peripheral-to-peripheral transfers comes with distinct trade-offs that make it dangerous in production systems:
